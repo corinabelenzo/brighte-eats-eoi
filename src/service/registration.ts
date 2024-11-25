@@ -21,7 +21,7 @@ const getProducts = async (productNames: [string]) : Promise<Product[]> => {
   return products
 }
 
-export const registerUser = async (name: string, email: string, mobile: string, postcode: string, interests: [string]): Promise<RegistrationDetails> => {
+export const register = async (name: string, email: string, mobile: string, postcode: string, interests: [string]): Promise<RegistrationDetails> => {
   const products = await getProducts(interests);
 
   const user = new User()

@@ -4,15 +4,15 @@ import { makeExtendSchemaPlugin, gql } from 'graphile-utils'
 import { AppDataSource } from './data-source'
 import { User } from './entity/User'
 import { Product } from './entity/Product'
-import { registerUser } from './service/registration'
+import { register } from './service/registration'
 
 const pgUsername = 'postgres'
 const pgPassword = 'postgres'
 
-const RegisterUserPlugin = makeExtendSchemaPlugin(_build => {
+const RegisterPlugin = makeExtendSchemaPlugin(_build => {
   return {
     typeDefs: gql`
-      input RegisterUserInput {
+      input RegisterInput {
         name: String!
         email: String!
         mobile: String!
@@ -20,7 +20,7 @@ const RegisterUserPlugin = makeExtendSchemaPlugin(_build => {
         interests: [String]
       }
 
-      type RegisterUserPayload {
+      type RegisterPayload {
         name: String,
         email: String,
         mobile: String,
@@ -29,16 +29,16 @@ const RegisterUserPlugin = makeExtendSchemaPlugin(_build => {
       }
 
       extend type Mutation {
-        registerUser(input: RegisterUserInput!): RegisterUserPayload
+        register(input: RegisterInput!): RegisterPayload
       }
     `,
     resolvers: {
       Mutation: {
-        registerUser: async (_query, args, _context, _resolveInfo) => {
+        register: async (_query, args, _context, _resolveInfo) => {
           try {
             const { name, email, mobile, postcode, interests } = args.input
-            const userRegistration = await registerUser(name, email, mobile, postcode, interests)
-            return { ...userRegistration }
+            const registration = await register(name, email, mobile, postcode, interests)
+            return { ...registration }
           } catch (e) {
             console.error('Error registering user', e)
             throw e
@@ -56,7 +56,7 @@ const App = () => {
     watchPg: true,
     graphiql: true,
     enhanceGraphiql: true,
-    appendPlugins: [RegisterUserPlugin],
+    appendPlugins: [RegisterPlugin],
   }))
   
   app.get('/api/v1/hello', async (req, res, next) => {
