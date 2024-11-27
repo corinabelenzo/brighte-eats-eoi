@@ -12,7 +12,7 @@ export type RegistrationDetails = {
   postcode: string
 }
 
-const getProducts = async (productNames: [string]) : Promise<Product[]> => {
+const getProducts = async (productNames: string[]) : Promise<Product[]> => {
   const products: Product[] = []
   await Promise.all(productNames.map(async (productName) => {
     const product = await productRepository.findOneByOrFail({ name: productName });
@@ -21,7 +21,7 @@ const getProducts = async (productNames: [string]) : Promise<Product[]> => {
   return products
 }
 
-export const register = async (name: string, email: string, mobile: string, postcode: string, interests: [string]): Promise<RegistrationDetails> => {
+export const register = async (name: string, email: string, mobile: string, postcode: string, interests: string[]): Promise<RegistrationDetails> => {
   const products = await getProducts(interests);
 
   const user = new User()
